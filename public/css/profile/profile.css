@@ -1,0 +1,143 @@
+/* profile.css — styles for views/profile/profile.ejs */
+
+* { box-sizing: border-box; }
+
+body {
+  background: #fdf7f5;
+  font-family: 'Assistant', sans-serif;
+  color: #2b2b2b;
+  margin: 0 !important;
+  margin-left: 220px !important;
+}
+.skillloop-sidebar .material-icons { display: none !important; }
+
+.page {
+  padding: 24px 30px 40px;
+  max-width: 1080px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #f2e3dd;
+  border-radius: 8px;
+}
+
+/* ── Header ── */
+.profile-head {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 18px 22px;
+  margin-bottom: 26px;
+}
+.avatar {
+  width: 110px; height: 64px;
+  border-radius: 6px;
+  background: #e4e4e4;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 26px; font-weight: 700;
+  overflow: hidden;
+}
+.avatar.initial { background: linear-gradient(135deg, #ff8a4c, #d84315); }
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+.who h1 {
+  font-size: 26px; font-weight: 600; color: #1f1f1f;
+  margin: 0 0 2px; line-height: 1.15;
+}
+.who p { font-size: 13.5px; color: #a09793; margin: 0; }
+
+/* ── Sections ── */
+.sec-label {
+  font-size: 15px; font-weight: 400; color: #3d3d3d;
+  margin: 0 0 9px;
+}
+.sec { margin-bottom: 26px; }
+
+.bio-card { padding: 15px 18px; }
+.bio-card p {
+  font-size: 12.5px; color: #4a4a4a; margin: 0;
+  line-height: 1.7; white-space: pre-wrap;
+}
+.bio-empty { font-size: 12.5px; color: #b8aca7; margin: 0; }
+
+/* Expertise pills */
+.pills { display: flex; flex-wrap: wrap; gap: 18px; }
+.pill {
+  background: #ec6608;
+  color: #fff;
+  border: 1px solid #ec6608;
+  border-radius: 5px;
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 8px 26px;
+  min-width: 132px;
+  text-align: center;
+}
+.pill.muted {
+  background: #fffaf8; color: #b8aca7; border-color: #e8d5cd;
+  font-weight: 400;
+}
+
+/* Activity stats */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.stat {
+  background: #fff;
+  border: 1px solid #f2e3dd;
+  border-radius: 8px;
+  padding: 16px 10px;
+  text-align: center;
+}
+.stat-num {
+  font-size: 17px; font-weight: 600; color: #1f1f1f;
+  margin: 0 0 2px;
+}
+.stat-label { font-size: 10.5px; color: #a09793; margin: 0; }
+
+/* ── Footer actions ── */
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  margin-top: auto;
+  padding-top: 40px;
+}
+.btn {
+  display: block;
+  width: 100%;
+  height: 44px;
+  line-height: 42px;
+  text-align: center;
+  border-radius: 7px;
+  font-family: 'Assistant', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-primary {
+  background: #dc2029; border: 1px solid #dc2029; color: #fff !important;
+}
+.btn-primary:hover { background: #c01a22; border-color: #c01a22; }
+.btn-ghost {
+  background: #fffaf8; border: 1px solid #e8d5cd; color: #4a4a4a !important;
+}
+.btn-ghost:hover { background: #f7ece7; border-color: #d9c2b8; }
+
+@media (max-width: 760px) {
+  body { margin-left: 0 !important; }
+  .page { padding: 18px 16px 30px; }
+  .stats { grid-template-columns: 1fr; gap: 12px; }
+  .actions { grid-template-columns: 1fr; gap: 12px; }
+  .profile-head { flex-direction: column; align-items: flex-start; }
+}
