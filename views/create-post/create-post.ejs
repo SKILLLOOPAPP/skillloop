@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create - SkillLoop</title>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/materialize.min.css">
+    <link rel="stylesheet" href="../../public/css/create-post/create-post.css">
+</head>
+<body>
+    <div class="page-title">
+        <span class="title">Create a post</span>
+        <span class="subtitle">Share what you need or can teach</span>
+    </div>
+
+    <div class="field">
+        <span class="field-label">Post Type</span>
+        <div class="post-type-row">
+            <button type="button" class="type-btn active-btn" value="offer">OFFER</button>
+            <button type="button" class="type-btn" value="request">REQUEST</button>
+            <button type="button" class="type-btn" value="exchange">EXCHANGE</button>
+        </div>
+    </div>
+
+    <div class="field">
+        <span class="field-label">Title</span>
+        <input type="text" id="title-field" class="text-field" placeholder="e.g., Need help with JavaScript">
+    </div>
+
+    <div class="field">
+        <span class="field-label">Description</span>
+        <input type="text" id="description-field" class="text-field" placeholder="Tell others more details...">
+    </div>
+
+    <div class="field">
+        <span class="field-label">Skills</span>
+        <input type="text" id="skills-field" class="text-field" placeholder="Add skills: JavaScript, React, Python">
+    </div>
+
+    <div class="field">
+        <span class="field-label">Availability</span>
+        <input type="text" id="availability-field" class="text-field" placeholder="Weekdays after 5pm">
+    </div>
+
+    <div class="action-row">
+        <button type="button" class="action-btn submit-btn">Submit</button>
+        <button type="button" class="action-btn cancel-btn">Cancel</button>
+    </div>
+
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+    <script>
+        const typeButtons = document.querySelectorAll('.type-btn');
+        typeButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                typeButtons.forEach(b => b.classList.remove('active-btn'));
+                btn.classList.add('active-btn');
+            });
+        });
+    </script>
+</body>
+</html>

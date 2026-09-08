@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Browse – SkillLoop</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/common/sidebar.css" />
+
+  <link rel="stylesheet" href="/css/browse/browse.css">
+</head>
+<body>
+
+  <%- include('partials/sidebar', { currentPage: 'browse', currentUser: currentUser }) %>
+
+  <div class="page">
+
+    <h2 class="page-title">Browse Posts</h2>
+    <p class="sub">
+      <%= posts.length %> open post<%= posts.length === 1 ? '' : 's' %> from the SkillLoop community
+    </p>
+
+    <% if (posts.length > 0) { %>
+      <% posts.forEach(function(post) { %>
+        <a class="post-card" href="/posts/<%= post._id %>">
+          <div class="post-head">
+            <div style="min-width:0;flex:1;">
+              <p class="post-title"><%= post.title %></p>
+              <p class="post-meta">
+                <span class="mtype"><%= post.type %></span>
+                &middot; By <%= post.authorName %>
+                &middot; <%= post.timeAgo %>
+              </p>
+            </div>
+            <span class="status-pill">open</span>
+          </div>
+
+          <p class="post-desc"><%= post.description %></p>
+
+          <% if (post.skills && post.skills.length) { %>
+            <div class="post-tags">
+              <% post.skills.forEach(function(s) { %>[<%= s %>] <% }) %>
+            </div>
+          <% } %>
+        </a>
+      <% }) %>
+    <% } else { %>
+      <div class="empty">No posts to browse yet.</div>
+    <% } %>
+
+  </div>
+</body>
+</html>

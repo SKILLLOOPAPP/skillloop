@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Posts – SkillLoop</title>
+
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/common/sidebar.css" />
+
+  <link rel="stylesheet" href="/css/post/list.css">
+</head>
+<body>
+
+  <%- include('../partials/sidebar', { currentPage: 'posts', currentUser: currentUser }) %>
+
+  <div class="page">
+
+    <!-- Header -->
+    <div class="page-head">
+      <h2><%= mine ? 'My Posts' : 'Posts' %></h2>
+      <a href="/posts/create" class="btn-new">+ Create Post</a>
+    </div>
+
+    <!-- Search -->
+    <form class="search-form" method="GET" action="/posts">
+      <% if (type) { %><input type="hidden" name="type" value="<%= type %>" /><% } %>
+      <% if (skill) { %><input type="hidden" name="skill" value="<%= skill %>" /><% } %>
+      <% if (mine) { %><input type="hidden" name="mine" value="1" /><% } %>
+      <input type="text" name="q" class="search-box" value="<%= q %>"
+             placeholder="Search all posts..." />
+    </form>
+
+    <!-- Filter chips -->
+    <div class="chips">
+      <a class="chip <%= type === 'offer'    ? 'active' : '' %>"
+         href="/posts?type=<%= type === 'offer'    ? '' : 'offer'    %><%= q ? '&q=' + q : '' %><%= mine ? '&mine=1' : '' %>">Offer</a>
+      <a class="chip <%= type === 'request'  ? 'active' : '' %>"
+         href="/posts?type=<%= type === 'request'  ? '' : 'request'  %><%= q ? '&q=' + q : '' %><%= mine ? '&mine=1' : '' %>">Request</a>
+      <a class="chip <%= type === 'exchange' ? 'active' : '' %>"
+         href="/posts?type=<%= type === 'exchange' ? '' : 'exchange' %><%= q ? '&q=' + q : '' %><%= mine ? '&mine=1' : '' %>">Exchange</a>
+
+      <% topSkills.forEach(function(s) { %>
+        <a class="chip <%= skill.toLowerCase() === s.toLowerCase() ? 'active' : '' %>"
+           href="/posts?skill=<%= skill.toLowerCase() === s.toLowerCase() ? '' : encodeURIComponent(s) %><%= q ? '&q=' + q : '' %><%= type ? '&type=' + type : '' %>"><%= s %></a>
+      <% }) %>
+
+      <a class="chip <%= mine ? 'active' : '' %>"
+         href="/posts?<%= mine ? '' : 'mine=1' %><%= q ? '&q=' + q : '' %><%= type ? '&type=' + type : '' %>">My Posts</a>
+
+      <% if (q || type || skill || mine) { %>
+        <a class="chip clear" href="/posts">✕ Clear</a>
+      <% } %>
+    </div>
+
+    <% if (q || type || skill || mine) { %>
+      <p class="result-line"><%= total %> post<%= total === 1 ? '' : 's' %> found</p>
+    <% } %>
+
+    <!-- Posts -->
+    <% if (posts.length > 0) { %>
+      <% posts.forEach(function(post) { %>
+        <div class="post-card">
+          <div class="post-head">
+            <div style="min-width:0;flex:1;">
+              <p class="post-title"><%= post.title %></p>
+              <p class="post-meta">
+                <span class="mtype"><%= post.type %></span>
+                &middot; By <%= post.authorName %>
+                &middot; <%= post.timeAgo %>
+              </p>
+            </div>
+            <span class="status-pill st-<%= post.status %>"><%= post.status %></span>
+          </div>
+
+          <p class="post-desc"><%= post.description %></p>
+
+          <% if (post.skills && post.skills.length) { %>
+            <div class="post-tags">
+              <% post.skills.forEach(function(s) { %>[<%= s %>] <% }) %>
+            </div>
+          <% } %>
+
+          <% if (post.isMine) { %>
+            <div class="owner-actions">
+              <a href="/posts/<%= post._id %>/edit">Edit</a>
+              <span>|</span>
+              <% if (post.status === 'open') { %>
+                <form method="POST" action="/posts/<%= post._id %>/resolve">
+                  <button type="submit">Resolve</button>
+                </form>
+              <% } else { %>
+                <span style="color:#b3a8a4;">Resolved</span>
+              <% } %>
+              <span>|</span>
+              <form method="POST" action="/posts/<%= post._id %>/delete">
+                <button type="submit" onclick="return confirm('Delete this post?')">Delete</button>
+              </form>
+            </div>
+          <% } %>
+        </div>
+      <% }) %>
+
+      <!-- Pagination -->
+      <% if (totalPages > 1) {
+           var qs = function(p) {
+             var parts = ['page=' + p];
+             if (q)     parts.push('q=' + encodeURIComponent(q));
+             if (type)  parts.push('type=' + type);
+             if (skill) parts.push('skill=' + encodeURIComponent(skill));
+             if (mine)  parts.push('mine=1');
+             return '/posts?' + parts.join('&');
+           };
+      %>
+        <div class="pager">
+          <% if (page > 1) { %><a href="<%= qs(page - 1) %>">‹ Prev</a><% } %>
+
+          <% for (var i = 1; i <= totalPages; i++) { %>
+            <% if (i === 1 || i === totalPages || Math.abs(i - page) <= 1) { %>
+              <% if (i === page) { %>
+                <span class="cur"><%= i %></span>
+              <% } else { %>
+                <a href="<%= qs(i) %>"><%= i %></a>
+              <% } %>
+            <% } else if (Math.abs(i - page) === 2) { %>
+              <span class="dots">…</span>
+            <% } %>
+          <% } %>
+
+          <% if (page < totalPages) { %><a href="<%= qs(page + 1) %>">Next ›</a><% } %>
+        </div>
+      <% } %>
+
+    <% } else { %>
+      <div class="empty">
+        No posts found.
+        <a href="/posts/create">Create the first one →</a>
+      </div>
+    <% } %>
+
+  </div>
+</body>
+</html>

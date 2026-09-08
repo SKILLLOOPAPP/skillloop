@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up - SkillLoop</title>
+</head>
+<body>
+  <div style="display: flex; min-height: 100vh;">
+    <!-- Left Sidebar -->
+    <div style="flex: 1; padding: 40px; display: flex; flex-direction: column; justify-content: center;">
+      <h1 style="font-size: 32px; margin: 0 0 20px 0;">SkillLoop</h1>
+      <p style="font-size: 18px; margin: 0; color: #666;">Join a campus of skill-sharers</p>
+    </div>
+
+    <!-- Right Form Area -->
+    <div style="flex: 1; padding: 40px; display: flex; flex-direction: column; justify-content: center;">
+      <div style="max-width: 400px;">
+        <h2 style="font-size: 28px; margin: 0 0 10px 0;">Create account</h2>
+        <p style="font-size: 14px; margin: 0 0 30px 0; color: #999;">Talent & Article</p>
+
+        <form id="signupForm">
+          <div style="margin-bottom: 20px;">
+            <label for="firstName" style="display: block; margin-bottom: 5px;">Name</label>
+            <input
+              type="text"
+              id="firstName"
+              name="firstName"
+              required
+              placeholder="John Doe"
+              style="width: 100%; padding: 10px; border: 1px solid #ccc; box-sizing: border-box;"
+            >
+            <span id="firstNameError" style="color: red; font-size: 12px;"></span>
+          </div>
+
+          <div style="margin-bottom: 20px;">
+            <label for="email" style="display: block; margin-bottom: 5px;">Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              placeholder="john@university.edu"
+              style="width: 100%; padding: 10px; border: 1px solid #ccc; box-sizing: border-box;"
+            >
+            <span id="emailError" style="color: red; font-size: 12px;"></span>
+          </div>
+
+          <div style="margin-bottom: 20px;">
+            <label for="password" style="display: block; margin-bottom: 5px;">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              required
+              minlength="6"
+              placeholder="Min. 6 characters"
+              style="width: 100%; padding: 10px; border: 1px solid #ccc; box-sizing: border-box;"
+            >
+            <span id="passwordError" style="color: red; font-size: 12px;"></span>
+          </div>
+
+          <button type="submit" style="width: 100%; padding: 12px; background-color: #000; color: #fff; border: none; cursor: pointer; font-size: 16px; margin-bottom: 20px;">
+            Create Account
+          </button>
+
+          <div id="successMessage" style="display: none; color: green; margin-bottom: 10px;">
+            Account created successfully! Redirecting...
+          </div>
+
+          <div id="errorMessage" style="display: none; color: red; margin-bottom: 10px;"></div>
+        </form>
+
+        <p style="font-size: 14px; margin: 0;">
+          Already have account? <a href="/signin" style="color: #000; text-decoration: underline;">Sign in</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/auth/signup.js"></script>
+</body>
+</html>

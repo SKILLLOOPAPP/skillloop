@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings – SkillLoop</title>
+  <link rel="stylesheet" href="/css/post/create-post.css">
+  <link rel="stylesheet" href="/css/profile/settings.css">
+</head>
+<body>
+
+  <%- include('../partials/sidebar', { currentPage: 'profile', currentUser: user }) %>
+
+  <div id="content">
+    <div id="page-title">
+      <span id="create-post-title">Settings</span>
+      <span id="create-post-subtext">Your account details</span>
+    </div>
+
+    <div class="info-row">
+      <span class="k">Email</span>
+      <span class="v"><%= user.email %></span>
+    </div>
+    <div class="info-row">
+      <span class="k">School</span>
+      <span class="v"><%= user.school || '—' %></span>
+    </div>
+    <div class="info-row">
+      <span class="k">Account status</span>
+      <span class="v"><%= user.accountStatus || 'active' %></span>
+    </div>
+    <div class="info-row">
+      <span class="k">Profile visibility</span>
+      <span class="v"><%= user.profileVisibility || 'public' %></span>
+    </div>
+    <div class="info-row">
+      <span class="k">Member since</span>
+      <span class="v"><%= new Date(user.createdAt).toLocaleDateString() %></span>
+    </div>
+
+    <div class="danger">
+      <h4>Session</h4>
+      <p>Sign out of SkillLoop on this device.</p>
+      <a href="/logout" class="btn-logout-full">Log out</a>
+    </div>
+
+    <div class="form-actions" style="grid-template-columns:1fr;max-width:400px;">
+      <a href="/profile"><button type="button" class="btn-cancel">Back to Profile</button></a>
+    </div>
+  </div>
+</body>
+</html>

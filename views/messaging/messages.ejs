@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Messages – SkillLoop</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/common/sidebar.css" />
+
+  <link rel="stylesheet" href="/css/messaging/messages.css">
+</head>
+<body>
+
+  <%- include('../partials/sidebar', { currentPage: 'messages', currentUser: currentUser }) %>
+
+  <div class="page">
+
+    <!-- ── Conversations ── -->
+    <div class="convos">
+      <p class="sec-label">Conversations</p>
+
+      <% if (conversations.length) { %>
+        <% conversations.forEach(function(c) { %>
+          <a class="convo <%= (active && active._id.toString() === c._id.toString()) ? 'active' : '' %>"
+             href="/messages?c=<%= c._id %>">
+            <%= c.label %>
+          </a>
+        <% }) %>
+      <% } else { %>
+        <div class="convo-empty">
+          No conversations yet — open a post in Browse and hit Send Message.
+        </div>
+      <% } %>
+    </div>
+
+    <% if (active) { %>
+
+      <p class="chat-head">Chat with <%= active.otherName %></p>
+
+      <div class="thread" id="thread"
+           data-convo="<%= active._id %>"
+           data-since="<%= lastStamp ? new Date(lastStamp).toISOString() : '' %>">
+        <% if (messages.length === 0) { %>
+          <p class="thread-empty" id="threadEmpty">No messages yet — say hello.</p>
+        <% } %>
+        <% messages.forEach(function(m) { %>
+          <div class="bubble <%= m.isMine ? 'me' : 'them' %>">
+            <p class="text"><%= m.content %></p>
+            <span class="time"><%= m.stamp %></span>
+          </div>
+        <% }) %>
+      </div>
+
+      <form class="composer" method="POST" action="/messages/<%= active._id %>/send">
+        <input type="text" name="content" placeholder="Type your message..."
+               maxlength="2000" autocomplete="off" required autofocus>
+        <button type="submit" class="btn-send">Send</button>
+      </form>
+
+    <% } else { %>
+      <div class="no-chat">Select a conversation to start chatting.</div>
+    <% } %>
+
+  </div>
+
+  <script>
+    (function () {
+      var thread = document.getElementById('thread');
+      if (!thread) return;
+
+      // always start at the newest message
+      thread.scrollTop = thread.scrollHeight;
+
+      var convoId = thread.dataset.convo;
+      var since   = thread.dataset.since || '';
+
+      function addBubble(m) {
+        var empty = document.getElementById('threadEmpty');
+        if (empty) empty.remove();
+
+        var wrap = document.createElement('div');
+        wrap.className = 'bubble ' + (m.isMine ? 'me' : 'them');
+
+        var p = document.createElement('p');
+        p.className = 'text';
+        p.textContent = m.content;          // textContent — no HTML injection
+
+        var t = document.createElement('span');
+        t.className = 'time';
+        t.textContent = m.stamp;
+
+        wrap.appendChild(p);
+        wrap.appendChild(t);
+        thread.appendChild(wrap);
+      }
+
+      function poll() {
+        var url = '/messages/' + convoId + '/poll' + (since ? '?since=' + encodeURIComponent(since) : '');
+        fetch(url, { headers: { 'Accept': 'application/json' } })
+          .then(function (r) { return r.ok ? r.json() : { messages: [] }; })
+          .then(function (data) {
+            if (!data.messages || !data.messages.length) return;
+            var nearBottom = thread.scrollHeight - thread.scrollTop - thread.clientHeight < 120;
+            data.messages.forEach(function (m) {
+              addBubble(m);
+              since = m.createdAt;
+            });
+            if (nearBottom) thread.scrollTop = thread.scrollHeight;
+          })
+          .catch(function () { /* offline — try again next tick */ });
+      }
+
+      setInterval(poll, 4000);
+    })();
+  </script>
+</body>
+</html>

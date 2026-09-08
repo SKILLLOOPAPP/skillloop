@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkillLoop - Learn &amp; Share Skills</title>
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/home/home.css">
+</head>
+<body>
+
+  <!-- ══ Nav ══ -->
+  <nav class="nav">
+    <h1 class="brand">SkillLoop</h1>
+    <div class="nav-right">
+      <% if (currentUser) { %>
+        <a href="/dashboard" class="nav-link">Dashboard</a>
+        <a href="/logout" class="btn-nav">Log out</a>
+      <% } else { %>
+        <a href="/signin" class="nav-link">Sign in</a>
+        <a href="/signup" class="btn-nav">Get Started</a>
+      <% } %>
+    </div>
+  </nav>
+
+  <!-- ══ Hero ══ -->
+  <section class="hero">
+    <span class="eyebrow">Peer-to-peer skill exchange</span>
+
+    <h2>
+      Learn what you need.<br>
+      <span class="grad">Teach what you know.</span>
+    </h2>
+
+    <p>
+      SkillLoop connects students on campus to swap skills — from coding to guitar,
+      from calculus to cooking. Find a peer, exchange knowledge, grow together.
+    </p>
+
+    <div class="cta">
+      <% if (currentUser) { %>
+        <a href="/dashboard" class="btn btn-primary">Go to Dashboard</a>
+        <a href="/browse" class="btn btn-ghost">Browse Posts</a>
+      <% } else { %>
+        <a href="/signup" class="btn btn-primary">Create Account</a>
+        <a href="/signin" class="btn btn-ghost">Sign In</a>
+      <% } %>
+    </div>
+  </section>
+
+  <!-- ══ Steps ══ -->
+  <section class="steps-wrap">
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Create your profile</h3>
+        <p>List the skills you can teach and the ones you want to learn.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Find a match</h3>
+        <p>Get paired with peers whose skills fit what you're after.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Start learning</h3>
+        <p>Connect, schedule a session, and swap what you know.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ Footer ══ -->
+  <footer class="footer">
+    <div class="footer-inner">
+
+      <div>
+        <h4>About Us</h4>
+        <p>
+          SkillLoop is a peer-to-peer skill exchange built for students. We believe
+          every student knows something worth teaching and wants to learn something new —
+          so instead of paying for tutoring, you trade what you know for what you need.
+        </p>
+        <p>
+          Post a skill you can offer or a skill you're after, browse what your peers
+          have shared, and message them directly to arrange a swap. No fees, no
+          middlemen — just students helping students.
+        </p>
+      </div>
+
+      <div>
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="/browse">Browse Posts</a></li>
+          <li><a href="/signup">Create Account</a></li>
+          <li><a href="/signin">Sign In</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <strong>SkillLoop</strong> — Peer-to-peer student skill exchange
+    </div>
+  </footer>
+
+</body>
+</html>

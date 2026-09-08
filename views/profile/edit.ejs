@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edit Profile – SkillLoop</title>
+  <link rel="stylesheet" href="/css/post/create-post.css">
+</head>
+<body>
+
+  <%- include('../partials/sidebar', { currentPage: 'profile', currentUser: user }) %>
+
+  <div id="content">
+    <div id="page-title">
+      <span id="create-post-title">Edit Profile</span>
+      <span id="create-post-subtext">Update how others see you on SkillLoop</span>
+    </div>
+
+    <% if (error) { %>
+      <div class="form-error"><%= error %></div>
+    <% } %>
+    <% if (success) { %>
+      <div class="form-error" style="background:#eaf6ec;color:#2e7d32;border-color:#c6e6cb;">
+        <%= success %>
+      </div>
+    <% } %>
+
+    <form method="POST" action="/profile/edit">
+
+      <div class="text-field">
+        <label for="firstName">First Name</label>
+        <input type="text" id="firstName" name="firstName"
+               value="<%= user.firstName || '' %>" maxlength="60" required>
+      </div>
+
+      <div class="text-field">
+        <label for="lastName">Last Name</label>
+        <input type="text" id="lastName" name="lastName"
+               value="<%= user.lastName || '' %>" maxlength="60"
+               placeholder="Optional">
+      </div>
+
+      <div class="text-field">
+        <label for="school">School / University</label>
+        <input type="text" id="school" name="school"
+               value="<%= user.school || '' %>" maxlength="120"
+               placeholder="e.g., Deakin University">
+      </div>
+
+      <div class="text-field">
+        <label for="bio">Bio</label>
+        <textarea id="bio" name="bio" rows="4" maxlength="500"
+          placeholder="Tell others about yourself..."><%= user.bio || '' %></textarea>
+      </div>
+
+      <div class="text-field">
+        <label for="expertise">Expertise</label>
+        <input type="text" id="expertise" name="expertise"
+               value="<%= (user.expertise || []).map(function(e){ return e.skill; }).join(', ') %>"
+               placeholder="Skills you can teach: JavaScript, React, Data Analytics">
+      </div>
+
+      <div class="text-field">
+        <label for="lookingToLearn">Looking to Learn</label>
+        <input type="text" id="lookingToLearn" name="lookingToLearn"
+               value="<%= (user.lookingToLearn || []).map(function(l){ return l.skill; }).join(', ') %>"
+               placeholder="Skills you want to learn: Python, Japanese">
+      </div>
+
+      <div class="text-field">
+        <label for="avatar">Avatar URL</label>
+        <input type="text" id="avatar" name="avatar"
+               value="<%= user.avatar || '' %>"
+               placeholder="https://... (leave blank to use your initial)">
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-submit">Save Changes</button>
+        <a href="/profile"><button type="button" class="btn-cancel">Cancel</button></a>
+      </div>
+
+    </form>
+  </div>
+</body>
+</html>
