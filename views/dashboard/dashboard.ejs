@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard – SkillLoop</title>
+
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/common/sidebar.css" />
+
+  <link rel="stylesheet" href="/css/dashboard/dashboard.css">
+</head>
+<body>
+
+  <%- include('../partials/sidebar', { currentPage: 'dashboard', currentUser: user }) %>
+
+  <!-- ═══ FULL-WIDTH SEARCH ═══ -->
+  <div class="topbar">
+    <input type="text" class="search-box" placeholder="Search posts..."
+           oninput="filterSuggested(this.value)" />
+  </div>
+
+  <div class="dash">
+
+    <!-- ═══ MAIN COLUMN ═══ -->
+    <div class="col-main">
+
+      <div class="welcome">Welcome, <%= user.firstName || 'User' %>!</div>
+
+      <a href="/posts/create" class="btn-create">+ Create Post</a>
+
+      <!-- Suggested for You -->
+      <h3 class="sec-head">Suggested for You</h3>
+
+      <% if (typeof suggestedPosts !== 'undefined' && suggestedPosts.length > 0) { %>
+        <div class="sugg-grid" id="suggGrid">
+          <% suggestedPosts.slice(0, 3).forEach(function(post) { %>
+            <div class="sugg-card" data-search="<%= (post.title + ' ' + (post.skills || []).join(' ')).toLowerCase() %>">
+              <div class="sugg-type"><%= post.type %></div>
+              <div class="sugg-skill"><%= (post.skills && post.skills.length) ? post.skills[0] : post.title %></div>
+              <div class="sugg-by">By <%= (post.author && post.author.firstName) ? post.author.firstName : 'SkillLoop User' %></div>
+            </div>
+          <% }) %>
+        </div>
+      <% } else { %>
+        <p class="empty">No suggested posts yet — be the first to create one!</p>
+      <% } %>
+
+      <!-- Your Posts -->
+      <h3 class="sec-head">Your Posts</h3>
+
+      <% if (typeof userPosts !== 'undefined' && userPosts.length > 0) { %>
+        <% userPosts.forEach(function(post) { %>
+          <div class="post-item">
+            <div class="post-title"><%= post.title %></div>
+            <div class="post-desc"><%= post.description %></div>
+            <div class="post-links">
+              <a href="/posts/<%= post._id %>/edit">Edit</a>
+              <span>|</span>
+              <% if (post.status === 'open') { %>
+                <form method="POST" action="/posts/<%= post._id %>/resolve">
+                  <button type="submit">Resolve</button>
+                </form>
+              <% } else { %>
+                <span>Resolved</span>
+              <% } %>
+              <span>|</span>
+              <form method="POST" action="/posts/<%= post._id %>/delete">
+                <button type="submit" onclick="return confirm('Delete this post?')">Delete</button>
+              </form>
+            </div>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <p class="empty">
+          You haven't created any posts yet.
+          <a href="/posts/create">Create your first post →</a>
+        </p>
+      <% } %>
+
+    </div>
+
+    <!-- ═══ RIGHT COLUMN ═══ -->
+    <div class="col-right">
+
+      <h3 class="panel-head">Notifications</h3>
+
+      <% if (typeof notifications !== 'undefined' && notifications.length > 0) { %>
+        <% notifications.forEach(function(n) { %>
+          <div class="notif-card">
+            <p class="notif-title"><%= n.title || 'Notification' %></p>
+            <p class="notif-sub"><%= n.message || n.timeAgo || '' %></p>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <div class="notif-card">
+          <p class="notif-sub" style="margin:0;">No notifications yet</p>
+        </div>
+      <% } %>
+
+      <h3 class="panel-head" style="margin-top:26px;">My Profile</h3>
+
+      <div class="profile-card">
+        <p class="pf-name"><%= user.firstName || 'User' %> <%= user.lastName || '' %></p>
+        <p class="pf-sub"><%= user.university || user.bio || 'Deakin University' %></p>
+
+        <p class="pf-label">Expertise:</p>
+        <p class="pf-tags">
+          <% if (user.skills && user.skills.length) { %>
+            <% user.skills.slice(0,4).forEach(function(s) { %>[<%= s %>] <% }) %>
+          <% } else { %>—<% } %>
+        </p>
+
+        <p class="pf-label">Learn:</p>
+        <p class="pf-tags">
+          <% var wants = user.learningGoals || user.wantToLearn || []; %>
+          <% if (wants.length) { %>
+            <% wants.slice(0,4).forEach(function(s) { %>[<%= s %>] <% }) %>
+          <% } else { %>—<% } %>
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    function filterSuggested(q) {
+      var cards = document.querySelectorAll('#suggGrid .sugg-card');
+      var s = q.toLowerCase().trim();
+      cards.forEach(function (c) {
+        c.style.display = (!s || (c.dataset.search || '').includes(s)) ? '' : 'none';
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="/css/common/sidebar.css">
+
+<aside class="skillloop-sidebar">
+  <div class="sidebar-header">
+    <h4 class="sidebar-title">SkillLoop</h4>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a href="/dashboard" class="nav-item <%= currentPage === 'dashboard' ? 'active' : '' %>">
+      <span>Dashboard</span>
+    </a>
+    <a href="/browse" class="nav-item <%= currentPage === 'browse' ? 'active' : '' %>">
+      <span>Browse</span>
+    </a>
+    <a href="/posts" class="nav-item <%= currentPage === 'posts' ? 'active' : '' %>">
+      <span>Posts</span>
+    </a>
+    <a href="/messages" class="nav-item <%= currentPage === 'messages' ? 'active' : '' %>">
+      <span>Messages</span>
+    </a>
+    <a href="/profile" class="nav-item <%= currentPage === 'profile' ? 'active' : '' %>">
+      <span>Profile</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <% if (currentUser) { %>
+      <div class="user-card">
+        <% if (currentUser.avatar) { %>
+          <img src="<%= currentUser.avatar %>" alt="" class="user-avatar">
+        <% } else { %>
+          <div class="user-avatar-initial"><%= currentUser.firstName ? currentUser.firstName.charAt(0).toUpperCase() : 'U' %></div>
+        <% } %>
+        <p class="user-name"><%= currentUser.firstName || '' %> <%= currentUser.lastName || '' %></p>
+        <p class="user-email"><%= currentUser.email || '' %></p>
+      </div>
+      <a href="/logout" class="btn-logout">Logout</a>
+    <% } else { %>
+      <a href="/signin" class="btn-logout">Sign In</a>
+    <% } %>
+  </div>
+</aside>

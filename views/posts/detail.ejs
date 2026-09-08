@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= post.title %> – SkillLoop</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/common/sidebar.css" />
+
+  <link rel="stylesheet" href="/css/post/detail.css">
+</head>
+<body>
+
+  <%- include('../partials/sidebar', { currentPage: 'browse', currentUser: currentUser }) %>
+
+  <div class="page">
+
+    <a href="/browse" class="back-link">&larr; Back to Browse</a>
+
+    <!-- ── Post ── -->
+    <div class="card">
+      <span class="status-pill st-<%= post.status %>"><%= post.status %></span>
+      <p class="post-title"><%= post.title %></p>
+      <p class="post-meta">
+        <span class="mtype"><%= post.type %></span>
+        &middot; By <%= post.authorName %>
+        &middot; Posted <%= post.timeAgo %>
+      </p>
+
+      <p class="post-body"><%= post.description %></p>
+
+      <% if (post.availability) { %>
+        <p class="post-avail">Available <%= post.availability %>.</p>
+      <% } %>
+
+      <% if (post.skills && post.skills.length) { %>
+        <div class="post-tags">
+          <% post.skills.forEach(function(s) { %>[<%= s %>] <% }) %>
+        </div>
+      <% } %>
+    </div>
+
+    <!-- ── Author ── -->
+    <div class="card">
+      <div class="author-row">
+        <div class="author-pic <%= (post.author && post.author.avatar) ? '' : 'has-initial' %>">
+          <% if (post.author && post.author.avatar) { %>
+            <img src="<%= post.author.avatar %>" alt="">
+          <% } else { %>
+            <%= post.authorName.charAt(0).toUpperCase() %>
+          <% } %>
+        </div>
+
+        <div class="author-info">
+          <p class="author-name"><%= post.authorName %></p>
+          <p class="author-sub">
+            <%= (post.author && post.author.school) || 'SkillLoop User' %>
+            <% if (post.author && post.author.rating && post.author.rating.average) { %>
+              &middot; <%= post.author.rating.average.toFixed(1) %> rating
+            <% } %>
+          </p>
+
+          <% if (isOwner) { %>
+            <a href="/messages" class="btn-message ghost">View Messages</a>
+            <p class="own-note">This is your post.</p>
+          <% } else { %>
+            <a href="/messages?to=<%= post.author._id %>&post=<%= post._id %>" class="btn-message">Send Message</a>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Comments ── -->
+    <h3 class="comments-head">Comments (<%= commentCount %>)</h3>
+
+    <form class="comment-form" method="POST" action="/posts/<%= post._id %>/comments">
+      <textarea name="body" placeholder="Write a comment..." maxlength="1000" required></textarea>
+      <div class="row2">
+        <button type="submit" class="btn-comment">Post Comment</button>
+      </div>
+    </form>
+
+    <% if (comments.length === 0) { %>
+      <p class="no-comments">No comments yet — start the conversation.</p>
+    <% } %>
+
+    <% comments.forEach(function(c) { %>
+      <div class="comment">
+        <p class="c-name"><%= c.authorName %></p>
+        <p class="c-body"><%= c.body %></p>
+        <div class="c-foot">
+          <button type="button" onclick="toggleReply('<%= c._id %>')">Reply</button>
+          <% if (c.isMine) { %>
+            <form method="POST" action="/posts/comments/<%= c._id %>/delete" style="display:inline;margin:0;">
+              <button type="submit" onclick="return confirm('Delete this comment?')">Delete</button>
+            </form>
+          <% } %>
+          <span>
+            <%= c.timeAgo %><% if (c.replies.length) { %> &middot; <%= c.replies.length %> <%= c.replies.length === 1 ? 'reply' : 'replies' %><% } %>
+          </span>
+        </div>
+
+        <% if (c.replies.length) { %>
+          <div class="replies">
+            <% c.replies.forEach(function(r) { %>
+              <div class="reply">
+                <p class="c-name"><%= r.authorName %></p>
+                <p class="c-body"><%= r.body %></p>
+                <div class="c-foot">
+                  <% if (r.isMine) { %>
+                    <form method="POST" action="/posts/comments/<%= r._id %>/delete" style="display:inline;margin:0;">
+                      <button type="submit" onclick="return confirm('Delete this reply?')">Delete</button>
+                    </form>
+                  <% } %>
+                  <span><%= r.timeAgo %></span>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+        <% } %>
+
+        <form class="reply-form comment-form" id="reply-<%= c._id %>" style="display:none;"
+              method="POST" action="/posts/<%= post._id %>/comments">
+          <input type="hidden" name="parent" value="<%= c._id %>">
+          <textarea name="body" placeholder="Write a reply..." maxlength="1000" required></textarea>
+          <div class="row2">
+            <button type="submit" class="btn-comment">Reply</button>
+          </div>
+        </form>
+      </div>
+    <% }) %>
+
+  </div>
+
+  <script>
+    function toggleReply(id) {
+      var f = document.getElementById('reply-' + id);
+      if (!f) return;
+      var open = f.style.display !== 'none';
+      f.style.display = open ? 'none' : 'block';
+      if (!open) f.querySelector('textarea').focus();
+    }
+  </script>
+</body>
+</html>

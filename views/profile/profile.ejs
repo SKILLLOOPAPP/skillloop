@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile – SkillLoop</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/common/sidebar.css" />
+
+  <link rel="stylesheet" href="/css/profile/profile.css">
+</head>
+<body>
+
+  <%- include('../partials/sidebar', { currentPage: 'profile', currentUser: user }) %>
+
+  <div class="page">
+
+    <!-- ── Header ── -->
+    <div class="card profile-head">
+      <div class="avatar <%= user.avatar ? '' : 'initial' %>">
+        <% if (user.avatar) { %>
+          <img src="<%= user.avatar %>" alt="">
+        <% } else { %>
+          <%= (user.firstName || 'U').charAt(0).toUpperCase() %>
+        <% } %>
+      </div>
+      <div class="who">
+        <h1><%= user.firstName || 'User' %> <%= user.lastName || '' %></h1>
+        <p><%= user.school || 'SkillLoop User' %></p>
+      </div>
+    </div>
+
+    <!-- ── Bio ── -->
+    <div class="sec">
+      <p class="sec-label">Bio</p>
+      <div class="card bio-card">
+        <% if (user.bio) { %>
+          <p><%= user.bio %></p>
+        <% } else { %>
+          <p class="bio-empty">No bio yet — add one from Edit Profile.</p>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- ── Expertise ── -->
+    <div class="sec">
+      <p class="sec-label">Expertise</p>
+      <div class="pills">
+        <% if (user.expertise && user.expertise.length) { %>
+          <% user.expertise.forEach(function(e) { %>
+            <span class="pill">[<%= e.skill %>]</span>
+          <% }) %>
+        <% } else { %>
+          <span class="pill muted">No skills added yet</span>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- ── Looking to learn ── -->
+    <% if (user.lookingToLearn && user.lookingToLearn.length) { %>
+      <div class="sec">
+        <p class="sec-label">Looking to Learn</p>
+        <div class="pills">
+          <% user.lookingToLearn.forEach(function(l) { %>
+            <span class="pill muted">[<%= l.skill %>]</span>
+          <% }) %>
+        </div>
+      </div>
+    <% } %>
+
+    <!-- ── Activity ── -->
+    <div class="sec">
+      <p class="sec-label">Your Activity</p>
+      <div class="stats">
+        <div class="stat">
+          <p class="stat-num"><%= stats.posts %></p>
+          <p class="stat-label">Posts Shared</p>
+        </div>
+        <div class="stat">
+          <p class="stat-num"><%= stats.connections %></p>
+          <p class="stat-label">Connections</p>
+        </div>
+        <div class="stat">
+          <p class="stat-num"><%= stats.rating %></p>
+          <p class="stat-label">
+            Rating (<%= stats.reviews %> review<%= stats.reviews === 1 ? '' : 's' %>)
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Actions ── -->
+    <div class="actions">
+      <a href="/profile/edit" class="btn btn-primary">Edit Profile</a>
+      <a href="/profile/settings" class="btn btn-ghost">Settings</a>
+    </div>
+
+  </div>
+</body>
+</html>
