@@ -1,0 +1,13 @@
+# Normalise line endings: LF in the repository, native in the working tree.
+* text=auto eol=lf
+
+# Binary — never touch
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.docx binary
+*.xlsx binary
+*.pptx binary
