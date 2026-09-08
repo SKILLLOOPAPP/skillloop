@@ -1,0 +1,204 @@
+/* ═══════════════════════════════════════════
+   SkillLoop — Create / Edit Post
+   public/css/post/create-post.css
+   ═══════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&display=swap');
+
+* { box-sizing: border-box; }
+
+body {
+  background: #fdf7f5;
+  font-family: 'Assistant', sans-serif;
+  color: #2b2b2b;
+  margin: 0 !important;
+  margin-left: 210px !important;
+}
+
+#content {
+  padding: 30px 34px 50px;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+/* ── Page title ── */
+#page-title {
+  margin-bottom: 26px;
+}
+#create-post-title {
+  display: block;
+  font-size: 20px;
+  font-weight: 600;
+  color: #1f1f1f;
+  margin-bottom: 3px;
+}
+#create-post-subtext {
+  display: block;
+  font-size: 12.5px;
+  color: #a09793;
+}
+
+/* ── Error banner ── */
+.form-error {
+  background: #fdeaea;
+  color: #c0392b;
+  border: 1px solid #f5c6c6;
+  padding: 11px 14px;
+  border-radius: 7px;
+  margin-bottom: 20px;
+  font-size: 13.5px;
+}
+
+/* ── Field labels ── */
+#post-type-label,
+.text-field label {
+  display: block;
+  font-size: 15px;
+  font-weight: 400;
+  color: #3d3d3d;
+  margin-bottom: 9px;
+}
+
+/* ── Post type buttons ── */
+.post-type-group {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 26px;
+}
+
+.post-type-group label {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 42px;
+  background: #fffaf8;
+  border: 1px solid #e8d5cd;
+  border-radius: 7px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: #6b6b6b;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.15s ease;
+}
+
+.post-type-group label:hover {
+  border-color: #f0a877;
+  background: #fff3ec;
+}
+
+/* hide the native radio, keep it accessible */
+.post-type-group input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  cursor: pointer;
+}
+
+/* selected state */
+.post-type-group label:has(input[type="radio"]:checked) {
+  background: #ec6608;
+  border-color: #ec6608;
+  color: #fff;
+  box-shadow: 0 1px 4px rgba(236, 102, 8, 0.3);
+}
+
+/* keyboard focus ring */
+.post-type-group label:has(input[type="radio"]:focus-visible) {
+  outline: 2px solid #3b6ef5;
+  outline-offset: 1px;
+}
+
+/* ── Text fields ── */
+.text-field {
+  margin-bottom: 22px;
+}
+
+.text-field input[type="text"],
+.text-field textarea {
+  width: 100%;
+  background: #fffaf8;
+  border: 1px solid #e8d5cd;
+  border-radius: 7px;
+  padding: 11px 15px;
+  font-family: 'Assistant', sans-serif;
+  font-size: 13.5px;
+  color: #2b2b2b;
+  outline: none;
+  transition: border-color 0.15s;
+  resize: none;
+  display: block;
+  height: auto;
+  margin: 0;
+}
+
+.text-field input[type="text"] { height: 42px; }
+.text-field textarea { min-height: 96px; line-height: 1.55; }
+
+.text-field input[type="text"]::placeholder,
+.text-field textarea::placeholder {
+  color: #b8aca7;
+}
+
+.text-field input[type="text"]:focus,
+.text-field textarea:focus {
+  border-color: #ec6608;
+  background: #fff;
+}
+
+/* ── Actions ── */
+.form-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 34px;
+  max-width: 800px;
+}
+
+.btn-submit,
+.btn-cancel {
+  width: 100%;
+  height: 46px;
+  border-radius: 7px;
+  font-family: 'Assistant', sans-serif;
+  font-size: 14.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-submit {
+  background: #dc2029;
+  border: 1px solid #dc2029;
+  color: #fff;
+}
+.btn-submit:hover { background: #c01a22; border-color: #c01a22; }
+
+.btn-cancel {
+  background: #fffaf8;
+  border: 1px solid #e8d5cd;
+  color: #4a4a4a;
+}
+.btn-cancel:hover { background: #f7ece7; border-color: #d9c2b8; }
+
+.form-actions a {
+  display: block;
+  text-decoration: none;
+}
+
+/* ── Sidebar overrides (partial uses .skillloop-sidebar) ── */
+.skillloop-sidebar .material-icons { display: none !important; }
+
+/* ── Responsive ── */
+@media (max-width: 760px) {
+  body { margin-left: 0 !important; }
+  #content { padding: 22px 18px 40px; }
+  .post-type-group { grid-template-columns: 1fr; gap: 10px; }
+  .form-actions { grid-template-columns: 1fr; gap: 12px; }
+}

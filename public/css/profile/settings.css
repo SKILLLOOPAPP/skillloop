@@ -1,0 +1,21 @@
+/* settings.css — styles for views/profile/settings.ejs */
+
+.info-row {
+  display: flex; justify-content: space-between; align-items: center;
+  background: #fff; border: 1px solid #e8d5cd; border-radius: 7px;
+  padding: 13px 16px; margin-bottom: 12px;
+}
+.info-row .k { font-size: 13px; color: #6b6b6b; }
+.info-row .v { font-size: 13px; color: #1f1f1f; font-weight: 600; }
+.danger {
+  margin-top: 34px; padding-top: 20px; border-top: 1px solid #eddfd9;
+}
+.danger h4 { font-size: 14px; color: #c0392b; margin: 0 0 6px; }
+.danger p { font-size: 12.5px; color: #a09793; margin: 0 0 14px; }
+.btn-logout-full {
+  display: inline-block; background: #fffaf8; border: 1px solid #e8d5cd;
+  color: #4a4a4a; border-radius: 7px; padding: 10px 26px;
+  font-family: 'Assistant', sans-serif; font-size: 13.5px; font-weight: 600;
+  text-decoration: none;
+}
+.btn-logout-full:hover { background: #f7ece7; }
