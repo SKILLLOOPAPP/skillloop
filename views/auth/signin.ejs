@@ -4,39 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign In - SkillLoop</title>
-    <link rel="stylesheet" href="../../public/css/auth/signin.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/auth/signin.css">
 </head>
 <body>
-    <div class="page-container">
-        <div class="side-panel">
-            <div class="brand">SkillLoop</div>
-            <div class="tagline">
-                <span id="tagline-1">Join a campus of <br> skill-sharers</span>
-                <span id="tagline-2">Post what you are stuck on or what you can teach.</span>
+    <div class="auth-shell">
+        <div class="auth-panel">
+            <div class="auth-brand">SkillLoop</div>
+            <div class="auth-tagline">
+                <p class="auth-tagline-main">Learn what you need.</p>
+                <p class="auth-tagline-sub">Connect with students who can teach what you need to learn.</p>
             </div>
         </div>
 
-        <div class="form-panel">
-            <span id="page-title">Welcome back</span>
-            <form>
-                <div class="field">
+        <div class="auth-form-panel">
+            <h1 class="auth-heading">Welcome Back</h1>
+
+            <div id="formAlert" class="auth-alert" role="alert" hidden></div>
+
+            <form id="signinForm" novalidate>
+                <div class="auth-field">
                     <label for="email">Email</label>
-                    <input type="email" id="email">
+                    <input type="email" id="email" name="email" autocomplete="email">
+                    <p class="auth-error" id="emailError"></p>
                 </div>
 
-                <div class="field">
+                <div class="auth-field">
                     <label for="password">Password</label>
-                    <input type="password" id="password">
+                    <input type="password" id="password" name="password" autocomplete="current-password">
+                    <p class="auth-error" id="passwordError"></p>
                 </div>
 
                 <div class="submit">
-                    <button type="submit" class="submit-btn">Sign In</button>
+                    <button type="submit" class="auth-submit" id="submitBtn">Sign In</button>
                 </div>
             </form>
 
-            <div class="signup">
-                <span>New to SkillLoop?</span>
-                <a href="#">Create an account</a>
+            <div class="auth-switch">
+                <p class="auth-switch-prompt">New to SkillLoop?</p>
+                <p class="auth-switch-link"><a href="/signup">Create an account</a></p>
             </div>
         </div>
     </div>

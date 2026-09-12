@@ -4,59 +4,69 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up - SkillLoop</title>
-    <link rel="stylesheet" href="../../public/css/auth/signup.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/auth/signup.css">
 </head>
 <body>
-    <div class="page-container">
-        <div class="side-panel">
-            <div class="brand">SkillLoop</div>
-            <div class="tagline">
-                <span id="tagline-1">Join a campus of <br> skill-sharers</span>
-                <span id="tagline-2">Post what you are stuck on or what you can teach.</span>
+    <div class="auth-shell">
+        <div class="auth-panel">
+            <div class="auth-brand">SkillLoop</div>
+            <div class="auth-tagline">
+                <p class="auth-tagline-main">Join a campus of skill-sharers.</p>
+                <p class="auth-tagline-sub">Post what you are stuck on or what you can teach.</p>
             </div>
         </div>
 
-        <div class="form-panel">
-            <span id="page-title">Create account</span>
-            <form>
-                <div class="field">
+        <div class="auth-form-panel">
+            <h1 class="auth-heading">Create Account</h1>
+
+            <div id="formAlert" class="auth-alert" role="alert" hidden></div>
+
+            <form id="signupForm" novalidate>
+                <div class="auth-field">
                     <label for="fullname">Full Name</label>
-                    <input type="text" id="fullname">
+                    <input type="text" id="fullname" name="fullname" autocomplete="name">
+                    <p class="auth-error" id="fullnameError"></p>
                 </div>
 
-                <div class="field">
+                <div class="auth-field">
                     <label for="email">Email</label>
-                    <input type="email" id="email">
+                    <input type="email" id="email" name="email" autocomplete="email">
+                    <p class="auth-error" id="emailError"></p>
                 </div>
 
-                <div class="password-row">
-                    <div class="field">
+                <div class="auth-field-row">
+                    <div class="auth-field">
                         <label for="password">Password</label>
-                        <input type="password" id="password">
+                        <input type="password" id="password" name="password" autocomplete="new-password">
+                        <p class="auth-error" id="passwordError"></p>
                     </div>
-                    <div class="field">
+                    <div class="auth-field">
                         <label for="confirm">Confirm</label>
-                        <input type="password" id="confirm">
+                        <input type="password" id="confirm" name="confirm" autocomplete="new-password">
+                        <p class="auth-error" id="confirmError"></p>
                     </div>
                 </div>
 
-                <div class="terms">
-                    <input type="checkbox" id="agree">
-                    <span>I agree to Terms and Privacy</span>
+                <div class="auth-checkbox">
+                    <input type="checkbox" id="agree" name="agree">
+                    <label for="agree">I agree to Terms and Privacy</label>
                 </div>
+                <p class="auth-error" id="agreeError"></p>
 
                 <div class="submit">
-                    <button type="submit" class="submit-btn">Create Account</button>
+                    <button type="submit" class="auth-submit" id="submitBtn">Create Account</button>
                 </div>
             </form>
 
-            <div class="signin">
-                <span>Already have an account?</span>
-                <a href="#">Sign in</a>
+            <div class="auth-switch">
+                <p class="auth-switch-prompt">Already have an account?</p>
+                <p class="auth-switch-link"><a href="/signin">Sign in</a></p>
             </div>
         </div>
     </div>
 
-  <script src="/js/auth/signin.js"></script>
+  <script src="/js/auth/signup.js"></script>
 </body>
 </html>
