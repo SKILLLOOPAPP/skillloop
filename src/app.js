@@ -57,7 +57,12 @@ function createApp() {
   });
 
   // ===== Auth Middleware =====
-  const { isLoggedIn, requireLogin } = require('./middleware/auth');
+  const {
+  isLoggedIn,
+  requireLogin,
+  verifyAuth,
+  requireAdmin
+} = require('./middleware/auth');
   app.use(isLoggedIn);
 
   // Load the full user record once per request so every view gets
