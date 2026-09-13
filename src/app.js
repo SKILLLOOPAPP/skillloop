@@ -57,7 +57,11 @@ function createApp() {
   });
 
   // ===== Auth Middleware =====
-  const { isLoggedIn, requireLogin } = require('./middleware/auth');
+const {
+  isLoggedIn,
+  requireLogin,
+  verifyAuth
+} = require('./middleware/auth');
   app.use(isLoggedIn);
 
   // Load the full user record once per request so every view gets
@@ -80,28 +84,32 @@ function createApp() {
 
   // ===== Routes =====
 
-  // Auth routes
-  const authRoutes = require('./routes/auth');
-  app.use('/api/auth', authRoutes);
+// Auth routes
+const authRoutes = require('./routes/auth');
+app.use('/api/auth', authRoutes);
 
-  // Posts routes
-  const postRoutes = require('./routes/posts');
-  app.use('/posts', requireLogin, postRoutes);
+// Posts routes
+const postRoutes = require('./routes/posts');
+app.use('/posts', requireLogin, postRoutes);
 
-  // Profile routes
-  const profileRoutes = require('./routes/profile');
-  app.use('/profile', requireLogin, profileRoutes);
+// UC4-6 - Posts REST API
+const apiPostRoutes = require('./routes/apiPosts');
+app.use('/api/posts', verifyAuth, apiPostRoutes);
 
-  // Messaging routes
-  const messageRoutes = require('./routes/messages');
-  app.use('/messages', requireLogin, messageRoutes);
+// Profile routes
+const profileRoutes = require('./routes/profile');
+app.use('/profile', requireLogin, profileRoutes);
 
-  // Logout
-  app.get('/logout', (req, res) => {
-    res.clearCookie('token');
-    if (req.session) req.session.destroy(() => res.redirect('/'));
-    else res.redirect('/');
-  });
+// Messaging routes
+const messageRoutes = require('./routes/messages');
+app.use('/messages', requireLogin, messageRoutes);
+
+// Logout
+app.get('/logout', (req, res) => {
+  res.clearCookie('token');
+  if (req.session) req.session.destroy(() => res.redirect('/'));
+  else res.redirect('/');
+});
 
   // ── Page routes ──
 
