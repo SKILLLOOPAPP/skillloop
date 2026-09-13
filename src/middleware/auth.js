@@ -78,3 +78,56 @@ exports.requireLogin = (req, res, next) => {
     res.redirect('/signin');
   }
 };
+
+// ============================================================
+// UC15 - Role-Based Access Control
+// Only administrators can access moderation functionality
+// ============================================================
+exports.requireAdmin = async (req, res, next) => {
+  try {
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({
+        success: false,
+        message: 'Authentication required'
+      });
+    }
+
+    const User = require('../models/User');
+
+    const user = await User.findById(req.user.id)
+      .select('role accountStatus')
+      .lean();
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    if (user.accountStatus !== 'active') {
+      return res.status(403).json({
+        success: false,
+        message: 'Account is not active'
+      });
+    }
+
+    if (user.role !== 'admin') {
+      return res.status(403).json({
+        success: false,
+        message: 'Admin access required'
+      });
+    }
+
+    req.authorizedUser = user;
+    next();
+
+  } catch (error) {
+    console.error('RBAC error:', error);
+
+    res.status(500).json({
+      success: false,
+      message: 'Authorization check failed'
+    });
+  }
+};
