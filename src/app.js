@@ -57,7 +57,11 @@ function createApp() {
   });
 
   // ===== Auth Middleware =====
-  const { isLoggedIn, requireLogin } = require('./middleware/auth');
+  const {
+  isLoggedIn,
+  requireLogin,
+  verifyAuth
+} = require('./middleware/auth');
   app.use(isLoggedIn);
 
   // Load the full user record once per request so every view gets
@@ -92,9 +96,10 @@ function createApp() {
   const profileRoutes = require('./routes/profile');
   app.use('/profile', requireLogin, profileRoutes);
 
-  // Messaging routes
-  const messageRoutes = require('./routes/messages');
-  app.use('/messages', requireLogin, messageRoutes);
+  
+// UC9 - Messaging REST API
+const apiMessageRoutes = require('./routes/apiMessages');
+app.use('/api/messages', verifyAuth, apiMessageRoutes);
 
   // Logout
   app.get('/logout', (req, res) => {
