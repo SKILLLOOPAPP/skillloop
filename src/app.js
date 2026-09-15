@@ -78,6 +78,10 @@ function createApp() {
     next();
   });
 
+  // ===== Unread Message Count Middleware =====
+  const { attachUnreadCount } = require('./middleware/unreadCount');
+  app.use(attachUnreadCount);
+
   // ===== Routes =====
 
   // Auth routes
