@@ -1,65 +1,101 @@
-document.getElementById('signinForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
+(function () {
+  const form = document.getElementById('signinForm');
+  if (!form) return;
 
-  // Clear previous errors
-  document.getElementById('emailError').textContent = '';
-  document.getElementById('passwordError').textContent = '';
-  document.getElementById('errorMessage').style.display = 'none';
+  const emailInput = document.getElementById('email');
+  const passwordInput = document.getElementById('password');
+  const emailError = document.getElementById('emailError');
+  const passwordError = document.getElementById('passwordError');
+  const formAlert = document.getElementById('formAlert');
+  const submitBtn = document.getElementById('submitBtn');
 
-  // Get form values
-  const email = document.getElementById('email').value.trim();
-  const password = document.getElementById('password').value;
-  const rememberMe = document.getElementById('rememberMe').checked;
+  const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  // Validation
-  if (!email) {
-    document.getElementById('emailError').textContent = 'Email is required';
-    return;
+  function setError(input, errorEl, message) {
+    errorEl.textContent = message || '';
+    if (message) {
+      input.setAttribute('aria-invalid', 'true');
+    } else {
+      input.removeAttribute('aria-invalid');
+    }
   }
 
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    document.getElementById('emailError').textContent = 'Invalid email format';
-    return;
+  function showAlert(message, type) {
+    formAlert.textContent = message;
+    formAlert.className = 'auth-alert auth-alert--' + type;
+    formAlert.hidden = false;
   }
 
-  if (!password) {
-    document.getElementById('passwordError').textContent = 'Password is required';
-    return;
+  function hideAlert() {
+    formAlert.hidden = true;
+    formAlert.textContent = '';
   }
 
-  try {
-    // Send signin request
-    const response = await fetch('/api/auth/signin', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: email,
-        password: password,
-      }),
-    });
+  function validateEmail() {
+    const value = emailInput.value.trim();
+    if (!value) {
+      setError(emailInput, emailError, 'Email is required');
+      return false;
+    }
+    if (!EMAIL_REGEX.test(value)) {
+      setError(emailInput, emailError, 'Enter a valid email address');
+      return false;
+    }
+    setError(emailInput, emailError, '');
+    return true;
+  }
 
-    const data = await response.json();
+  function validatePassword() {
+    if (!passwordInput.value) {
+      setError(passwordInput, passwordError, 'Password is required');
+      return false;
+    }
+    setError(passwordInput, passwordError, '');
+    return true;
+  }
 
-    if (data.success) {
-      // If remember me is checked, store token in localStorage
-      if (rememberMe) {
-        localStorage.setItem('authToken', data.token);
+  emailInput.addEventListener('blur', validateEmail);
+  passwordInput.addEventListener('blur', validatePassword);
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    hideAlert();
+
+    const emailOk = validateEmail();
+    const passwordOk = validatePassword();
+    if (!emailOk || !passwordOk) return;
+
+    const originalLabel = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Signing in…';
+
+    try {
+      const response = await fetch('/api/auth/signin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: emailInput.value.trim(),
+          password: passwordInput.value,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        showAlert('Sign in successful! Redirecting…', 'success');
+        setTimeout(() => {
+          window.location.href = '/dashboard';
+        }, 800);
+        return;
       }
 
-      document.getElementById('successMessage').style.display = 'block';
-      document.getElementById('successMessage').textContent = 'Sign in successful! Redirecting...';
-      setTimeout(() => {
-        window.location.href = '/dashboard';
-      }, 1000);
-    } else {
-      document.getElementById('errorMessage').style.display = 'block';
-      document.getElementById('errorMessage').textContent = data.message || 'Error signing in';
+      showAlert(data.message || 'Unable to sign in. Please try again.', 'error');
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalLabel;
+    } catch (error) {
+      showAlert('Network error — please check your connection and try again.', 'error');
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalLabel;
     }
-  } catch (error) {
-    document.getElementById('errorMessage').style.display = 'block';
-    document.getElementById('errorMessage').textContent = 'Network error: ' + error.message;
-  }
-});
+  });
+})();
