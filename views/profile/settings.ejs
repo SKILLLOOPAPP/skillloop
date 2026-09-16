@@ -44,6 +44,21 @@
       <a href="/logout" class="btn-logout-full">Log out</a>
     </div>
 
+    <% if (typeof error !== 'undefined' && error) { %>
+      <div class="form-error"><%= error %></div>
+    <% } %>
+
+    <div class="danger">
+      <h4>Delete Account</h4>
+      <p>This permanently disables your account. You'll be signed out and won't be able to sign back in.</p>
+      <form method="POST" action="/profile/delete"
+            onsubmit="return confirm('Delete your SkillLoop account? This cannot be undone.');">
+        <input type="password" name="password" placeholder="Confirm your password"
+               required class="delete-password-input">
+        <button type="submit" class="btn-delete-account">Delete Account</button>
+      </form>
+    </div>
+
     <div class="form-actions" style="grid-template-columns:1fr;max-width:400px;">
       <a href="/profile"><button type="button" class="btn-cancel">Back to Profile</button></a>
     </div>

@@ -26,6 +26,7 @@ function stamp(d) {
 
 function shortName(u) {
   if (!u || !u.firstName) return 'SkillLoop User';
+  if (u.accountStatus === 'deleted') return 'Deleted User';
   const last = u.lastName ? ' ' + u.lastName.charAt(0).toUpperCase() + '.' : '';
   return u.firstName + last;
 }
@@ -36,7 +37,7 @@ const isValidId = id => mongoose.Types.ObjectId.isValid(id);
 async function listConversations(userId) {
   const convos = await Conversation.find({ participants: userId })
     .sort({ lastMessageAt: -1 })
-    .populate('participants', 'firstName lastName')
+    .populate('participants', 'firstName lastName accountStatus')
     .populate('post', 'title')
     .lean();
 
@@ -99,7 +100,7 @@ router.get('/', async (req, res, next) => {
         _id: activeId,
         participants: me,          // membership check — can't open someone else's chat
       })
-        .populate('participants', 'firstName lastName avatar')
+        .populate('participants', 'firstName lastName avatar accountStatus')
         .populate('post', 'title')
         .lean();
 
