@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Edit Profile – SkillLoop</title>
   <link rel="stylesheet" href="/css/post/create-post.css">
+  <link rel="stylesheet" href="/css/profile/edit.css">
 </head>
 <body>
 
@@ -25,12 +26,18 @@
       </div>
     <% } %>
 
-    <form method="POST" action="/profile/edit">
+    <!-- T083: submitted as PUT /api/users/:id by /js/profile/edit.js.
+         The POST action stays as a no-JavaScript fallback. -->
+    <div id="formAlert" class="form-alert" role="status" hidden></div>
+
+    <form id="editProfileForm" method="POST" action="/profile/edit"
+          data-user-id="<%= user._id %>">
 
       <div class="text-field">
         <label for="firstName">First Name</label>
         <input type="text" id="firstName" name="firstName"
                value="<%= user.firstName || '' %>" maxlength="60" required>
+        <span class="field-error" id="firstNameError"></span>
       </div>
 
       <div class="text-field">
@@ -38,6 +45,7 @@
         <input type="text" id="lastName" name="lastName"
                value="<%= user.lastName || '' %>" maxlength="60"
                placeholder="Optional">
+        <span class="field-error" id="lastNameError"></span>
       </div>
 
       <div class="text-field">
@@ -45,12 +53,14 @@
         <input type="text" id="school" name="school"
                value="<%= user.school || '' %>" maxlength="120"
                placeholder="e.g., Deakin University">
+        <span class="field-error" id="schoolError"></span>
       </div>
 
       <div class="text-field">
         <label for="bio">Bio</label>
         <textarea id="bio" name="bio" rows="4" maxlength="500"
           placeholder="Tell others about yourself..."><%= user.bio || '' %></textarea>
+        <span class="field-error" id="bioError"></span>
       </div>
 
       <div class="text-field">
@@ -58,6 +68,7 @@
         <input type="text" id="expertise" name="expertise"
                value="<%= (user.expertise || []).map(function(e){ return e.skill; }).join(', ') %>"
                placeholder="Skills you can teach: JavaScript, React, Data Analytics">
+        <span class="field-error" id="expertiseError"></span>
       </div>
 
       <div class="text-field">
@@ -65,21 +76,25 @@
         <input type="text" id="lookingToLearn" name="lookingToLearn"
                value="<%= (user.lookingToLearn || []).map(function(l){ return l.skill; }).join(', ') %>"
                placeholder="Skills you want to learn: Python, Japanese">
+        <span class="field-error" id="lookingToLearnError"></span>
       </div>
 
       <div class="text-field">
         <label for="avatar">Avatar URL</label>
         <input type="text" id="avatar" name="avatar"
-               value="<%= user.avatar || '' %>"
+               value="<%= user.avatar || '' %>" maxlength="500"
                placeholder="https://... (leave blank to use your initial)">
+        <span class="field-error" id="avatarError"></span>
       </div>
 
       <div class="form-actions">
-        <button type="submit" class="btn-submit">Save Changes</button>
+        <button type="submit" id="submitBtn" class="btn-submit">Save Changes</button>
         <a href="/profile"><button type="button" class="btn-cancel">Cancel</button></a>
       </div>
 
     </form>
   </div>
+
+  <script src="/js/profile/edit.js"></script>
 </body>
 </html>

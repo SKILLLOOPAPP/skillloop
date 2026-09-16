@@ -1,0 +1,49 @@
+/* T083 — inline validation feedback on the Edit Profile form.
+   Loaded after create-post.css, which supplies the base form styling. */
+
+/* ── Form-level alert (success / error), shown by /js/profile/edit.js ── */
+.form-alert {
+  padding: 11px 14px;
+  border-radius: 7px;
+  margin-bottom: 20px;
+  font-size: 13.5px;
+  border: 1px solid transparent;
+  max-width: 800px;
+}
+
+.form-alert[hidden] {
+  display: none;
+}
+
+.form-alert--error {
+  background: #fdeaea;
+  color: #c0392b;
+  border-color: #f5c6c6;
+}
+
+.form-alert--success {
+  background: #eaf6ec;
+  color: #2e7d32;
+  border-color: #c6e6cb;
+}
+
+/* ── Per-field error message ── */
+.field-error {
+  display: block;
+  min-height: 16px;
+  margin-top: 6px;
+  font-size: 12.5px;
+  color: #c0392b;
+}
+
+.field-error:empty {
+  min-height: 0;
+  margin-top: 0;
+}
+
+/* ── Invalid field highlight ── */
+.text-field input[aria-invalid="true"],
+.text-field textarea[aria-invalid="true"] {
+  border-color: #dc2029;
+  background: #fffaf8;
+}
