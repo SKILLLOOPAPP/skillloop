@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Post = require('../models/Post');
+const { requirePostOwner } = require('../middleware/postOwnership');
 
 const PER_PAGE = 5;
 
@@ -116,45 +117,28 @@ router.post('/create', async (req, res) => {
 });
 
 // GET /posts/:id/edit — edit form (owner only)
-router.get('/:id/edit', async (req, res) => {
-  try {
-    const post = await Post.findOne({
-      _id: req.params.id,
-      author: req.user.id,
-      status: { $ne: 'deleted' }
-    }).lean();
-
-    if (!post) return res.redirect('/posts?mine=1');
-
-    res.render('posts/edit', { post, error: null });
-  } catch (err) {
-    console.error('Edit load error:', err);
-    res.redirect('/posts?mine=1');
-  }
+router.get('/:id/edit', requirePostOwner, (req, res) => {
+  res.render('posts/edit', {
+    post: req.post,
+    error: null,
+  });
 });
 
 // POST /posts/:id/edit — save changes (owner only)
-router.post('/:id/edit', async (req, res) => {
+router.post('/:id/edit', requirePostOwner, async (req, res) => {
   const { type, title, description, skills, availability } = req.body;
 
   try {
-    const post = await Post.findOne({
-      _id: req.params.id,
-      author: req.user.id,
-      status: { $ne: 'deleted' }
-    }).lean();
-
-    if (!post) return res.redirect('/posts?mine=1');
 
     if (!type || !title || !description) {
       return res.render('posts/edit', {
-          post: { ...post, type, title, description, skills: (skills || '').split(',').map(s => s.trim()).filter(Boolean), availability },
+          post: { ...req.post, type, title, description, skills: (skills || '').split(',').map(s => s.trim()).filter(Boolean), availability },
         error: 'Type, title and description are required.'
       });
     }
 
-    await Post.findOneAndUpdate(
-      { _id: req.params.id, author: req.user.id },
+    await Post.findByIdAndUpdate(
+      req.post._id,
       {
         type,
         title,
@@ -172,10 +156,10 @@ router.post('/:id/edit', async (req, res) => {
 });
 
 // POST /posts/:id/delete
-router.post('/:id/delete', async (req, res) => {
+router.post('/:id/delete', requirePostOwner, async (req, res) => {
   try {
-    await Post.findOneAndUpdate(
-      { _id: req.params.id, author: req.user.id },
+    await Post.findByIdAndUpdate(
+      req.post._id,
       { status: 'deleted' }
     );
     res.redirect(req.get('referer') || '/posts');
@@ -185,10 +169,10 @@ router.post('/:id/delete', async (req, res) => {
 });
 
 // POST /posts/:id/resolve
-router.post('/:id/resolve', async (req, res) => {
+router.post('/:id/resolve', requirePostOwner, async (req, res) => {
   try {
-    await Post.findOneAndUpdate(
-      { _id: req.params.id, author: req.user.id },
+    await Post.findByIdAndUpdate(
+      req.post._id,
       { status: 'resolved' }
     );
     res.redirect(req.get('referer') || '/posts');

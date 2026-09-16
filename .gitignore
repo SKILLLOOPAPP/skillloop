@@ -39,3 +39,4 @@ check.js
 
 # Jest coverage output
 coverage/
+.eslintcache
