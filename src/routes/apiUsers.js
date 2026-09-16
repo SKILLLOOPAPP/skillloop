@@ -37,9 +37,16 @@ router.get('/:id', async (req, res) => {
       });
     }
 
-    const user = await User.findById(id).select(PUBLIC_FIELDS).lean();
+    const user = await User.findById(id).select(PUBLIC_FIELDS + ' accountStatus').lean();
 
     if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+      });
+    }
+
+    if (user.accountStatus === 'deleted') {
       return res.status(404).json({
         success: false,
         message: 'User not found',

@@ -98,8 +98,45 @@ router.get('/settings', async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id).lean();
     if (!user) return res.redirect('/signin');
-    res.render('profile/settings', { user });
+    res.render('profile/settings', { user, error: null });
   } catch (err) {
+    next(err);
+  }
+});
+
+// POST /profile/delete — soft-delete own account (password required)
+router.post('/delete', async (req, res, next) => {
+  try {
+    const { password } = req.body;
+    const user = await User.findById(req.user.id).select('+password');
+    if (!user) return res.redirect('/signin');
+
+    if (!password) {
+      return res.render('profile/settings', {
+        user: user.toObject(),
+        error: 'Enter your password to confirm account deletion.',
+      });
+    }
+
+    const isPasswordCorrect = await user.comparePassword(password);
+    if (!isPasswordCorrect) {
+      return res.render('profile/settings', {
+        user: user.toObject(),
+        error: 'Incorrect password. Your account was not deleted.',
+      });
+    }
+
+    user.accountStatus = 'deleted';
+    await user.save();
+
+    res.clearCookie('token');
+    if (req.session) {
+      req.session.destroy(() => res.redirect('/'));
+    } else {
+      res.redirect('/');
+    }
+  } catch (err) {
+    console.error('Account delete error:', err);
     next(err);
   }
 });

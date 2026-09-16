@@ -23,6 +23,7 @@ function timeAgo(date) {
 // ── helper: "Alex M." ──
 function shortName(author) {
   if (!author || !author.firstName) return 'SkillLoop User';
+  if (author.accountStatus === 'deleted') return 'Deleted User';
   const last = author.lastName ? ' ' + author.lastName.charAt(0).toUpperCase() + '.' : '';
   return author.firstName + last;
 }
@@ -56,7 +57,7 @@ router.get('/', async (req, res) => {
       .sort({ createdAt: -1 })
       .skip((page - 1) * PER_PAGE)
       .limit(PER_PAGE)
-      .populate('author', 'firstName lastName')
+      .populate('author', 'firstName lastName accountStatus')
       .lean();
 
     const posts = raw.map(p => ({
@@ -189,20 +190,27 @@ router.get('/:id', async (req, res, next) => {
     const raw = await Post.findOne({
       _id: req.params.id,
       status: { $ne: 'deleted' }
-    }).populate('author', 'firstName lastName school rating avatar').lean();
+    }).populate('author', 'firstName lastName school rating avatar accountStatus').lean();
 
     if (!raw) return res.redirect('/browse');
 
+    // Hide the real avatar once the account is soft-deleted — the name is
+    // already covered by shortName(), the avatar isn't, so it's done here.
+    const authorSafe = (raw.author && raw.author.accountStatus === 'deleted')
+      ? { ...raw.author, avatar: null }
+      : raw.author;
+
     const post = {
       ...raw,
+      author: authorSafe,
       timeAgo: timeAgo(raw.createdAt),
-      authorName: shortName(raw.author),
+      authorName: shortName(authorSafe),
     };
     const isOwner = raw.author && raw.author._id.toString() === req.user.id;
 
     const all = await Comment.find({ post: raw._id, status: 'active' })
       .sort({ createdAt: 1 })
-      .populate('author', 'firstName lastName')
+      .populate('author', 'firstName lastName accountStatus')
       .lean();
 
     const decorate = c => ({
