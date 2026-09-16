@@ -28,7 +28,11 @@ describe('POST /api/auth/signup', () => {
   it('creates a new user and returns a token', async () => {
     const res = await request(app)
       .post('/api/auth/signup')
-      .send({ firstName: 'Alice', password: 'password123' });
+      .send({
+  firstName: 'Alice',
+  email: 'alice@skillloop.local',
+  password: 'password123'
+});
 
     expect(res.statusCode).toBe(201);
     expect(res.body.success).toBe(true);
@@ -58,11 +62,19 @@ describe('POST /api/auth/signup', () => {
   it('rejects duplicate user signup', async () => {
     await request(app)
       .post('/api/auth/signup')
-      .send({ firstName: 'Charlie', password: 'password123' });
+      .send({
+  firstName: 'Charlie',
+  email: 'charlie@skillloop.local',
+  password: 'password123'
+});
 
     const res = await request(app)
       .post('/api/auth/signup')
-      .send({ firstName: 'Charlie', password: 'password123' });
+      .send({
+  firstName: 'Charlie',
+  email: 'charlie@skillloop.local',
+  password: 'password123'
+});
 
     expect(res.statusCode).toBe(400);
     expect(res.body.success).toBe(false);
@@ -76,7 +88,11 @@ describe('POST /api/auth/signin', () => {
   beforeEach(async () => {
     await request(app)
       .post('/api/auth/signup')
-      .send({ firstName: 'Dave', password: 'password123' });
+      .send({
+  firstName: 'Dave',
+  email: 'dave@skillloop.local',
+  password: 'password123'
+});
   });
 
   it('signs in with correct credentials and returns a token', async () => {
@@ -123,7 +139,11 @@ describe('GET /api/auth/me', () => {
   it('returns user data when token is valid', async () => {
     const signupRes = await request(app)
       .post('/api/auth/signup')
-      .send({ firstName: 'Eve', password: 'password123' });
+      .send({
+  firstName: 'Eve',
+  email: 'eve@skillloop.local',
+  password: 'password123'
+});
 
     const token = signupRes.body.token;
 
