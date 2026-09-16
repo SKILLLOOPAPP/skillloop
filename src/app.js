@@ -57,7 +57,7 @@ function createApp() {
   });
 
   // ===== Auth Middleware =====
-  const { isLoggedIn, requireLogin } = require('./middleware/auth');
+  const { isLoggedIn, requireLogin, verifyAuth } = require('./middleware/auth');
   app.use(isLoggedIn);
 
   // Load the full user record once per request so every view gets
@@ -87,6 +87,10 @@ function createApp() {
   // Auth routes
   const authRoutes = require('./routes/auth');
   app.use('/api/auth', authRoutes);
+
+  // User API routes (JSON) — public profile lookup, used e.g. for post-author summaries
+  const apiUserRoutes = require('./routes/apiUsers');
+  app.use('/api/users', verifyAuth, apiUserRoutes);
 
   // Posts routes
   const postRoutes = require('./routes/posts');
