@@ -78,7 +78,7 @@ router.get('/', async (req, res) => {
         },
       },
       { $sort: { n: -1, _id: 1 } },
-      { $limit: 5 },
+      { $limit: 8 },
     ]);
     const topSkills = skillAgg.map(s => s.display);
 
