@@ -33,30 +33,38 @@
     </form>
 
     <!-- Filter chips -->
-    <div class="chips">
-      <a class="chip <%= type === 'offer'    ? 'active' : '' %>"
-         href="/posts?type=<%= type === 'offer'    ? '' : 'offer'    %><%= q ? '&q=' + q : '' %><%= mine ? '&mine=1' : '' %>">Offer</a>
-      <a class="chip <%= type === 'request'  ? 'active' : '' %>"
-         href="/posts?type=<%= type === 'request'  ? '' : 'request'  %><%= q ? '&q=' + q : '' %><%= mine ? '&mine=1' : '' %>">Request</a>
-      <a class="chip <%= type === 'exchange' ? 'active' : '' %>"
-         href="/posts?type=<%= type === 'exchange' ? '' : 'exchange' %><%= q ? '&q=' + q : '' %><%= mine ? '&mine=1' : '' %>">Exchange</a>
+    <div class="chips-row">
 
-      <% topSkills.forEach(function(s) { %>
-        <a class="chip <%= skill.toLowerCase() === s.toLowerCase() ? 'active' : '' %>"
-           href="/posts?skill=<%= skill.toLowerCase() === s.toLowerCase() ? '' : encodeURIComponent(s) %><%= q ? '&q=' + q : '' %><%= type ? '&type=' + type : '' %>"><%= s %></a>
-      <% }) %>
+      <div class="chip-group">
+        <a class="chip <%= type === 'offer' ? 'active' : '' %>"
+           href="/posts?type=<%= type === 'offer' ? '' : 'offer' %><%= q ? '&q=' + q : '' %><%= skill ? '&skill=' + encodeURIComponent(skill) : '' %><%= mine ? '&mine=1' : '' %>">Offer</a>
+        <a class="chip <%= type === 'request' ? 'active' : '' %>"
+           href="/posts?type=<%= type === 'request' ? '' : 'request' %><%= q ? '&q=' + q : '' %><%= skill ? '&skill=' + encodeURIComponent(skill) : '' %><%= mine ? '&mine=1' : '' %>">Request</a>
+        <a class="chip <%= type === 'exchange' ? 'active' : '' %>"
+           href="/posts?type=<%= type === 'exchange' ? '' : 'exchange' %><%= q ? '&q=' + q : '' %><%= skill ? '&skill=' + encodeURIComponent(skill) : '' %><%= mine ? '&mine=1' : '' %>">Exchange</a>
+      </div>
 
-      <a class="chip <%= mine ? 'active' : '' %>"
-         href="/posts?<%= mine ? '' : 'mine=1' %><%= q ? '&q=' + q : '' %><%= type ? '&type=' + type : '' %>">My Posts</a>
+      <span class="chip-divider"></span>
 
-      <% if (q || type || skill || mine) { %>
-        <a class="chip clear" href="/posts">✕ Clear</a>
-      <% } %>
+      <div class="chip-group chip-group-skills">
+        <% topSkills.forEach(function(s) { %>
+          <a class="chip chip-skill <%= skill.toLowerCase() === s.toLowerCase() ? 'active' : '' %>"
+             href="/posts?skill=<%= skill.toLowerCase() === s.toLowerCase() ? '' : encodeURIComponent(s) %><%= q ? '&q=' + q : '' %><%= type ? '&type=' + type : '' %>"><%= s %></a>
+        <% }) %>
+      </div>
+
+      <span class="chip-divider"></span>
+
+      <div class="chip-group chip-group-mine">
+        <a class="chip chip-mine <%= mine ? 'active' : '' %>"
+          href="/posts?<%= mine ? '' : 'mine=1' %><%= q ? '&q=' + q : '' %><%= type ? '&type=' + type : '' %><%= skill ? '&skill=' + encodeURIComponent(skill) : '' %>">My Posts</a>
+
+        <% if (q || type || skill || mine) { %>
+          <a class="chip clear" href="/posts">✕ Clear</a>
+        <% } %>
+      </div>
+
     </div>
-
-    <% if (q || type || skill || mine) { %>
-      <p class="result-line"><%= total %> post<%= total === 1 ? '' : 's' %> found</p>
-    <% } %>
 
     <!-- Posts -->
     <% if (posts.length > 0) { %>

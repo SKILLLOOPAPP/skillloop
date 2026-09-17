@@ -70,11 +70,17 @@ router.get('/', async (req, res) => {
     const skillAgg = await Post.aggregate([
       { $match: { status: 'open' } },
       { $unwind: '$skills' },
-      { $group: { _id: '$skills', n: { $sum: 1 } } },
-      { $sort: { n: -1 } },
+      {
+        $group: {
+          _id: { $toLower: '$skills' },
+          n: { $sum: 1 },
+          display: { $first: '$skills' },
+        },
+      },
+      { $sort: { n: -1, _id: 1 } },
       { $limit: 5 },
     ]);
-    const topSkills = skillAgg.map(s => s._id);
+    const topSkills = skillAgg.map(s => s.display);
 
     res.render('posts/list', {
       posts,

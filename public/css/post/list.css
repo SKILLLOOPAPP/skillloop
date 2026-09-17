@@ -68,12 +68,29 @@ body {
 .search-box:focus { border-color: #e8a48c; }
 
 /* Filter chips */
-.chips {
+.chips-row {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 10px;
   margin-bottom: 22px;
 }
+.chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+.chip-group-mine {
+  margin-left: auto; /* pushes My Posts / Clear to the right */
+}
+.chip-divider {
+  width: 1px;
+  height: 22px;
+  background: #f0ddd6;
+  flex-shrink: 0;
+}
+
 .chip {
   display: inline-block;
   min-width: 92px;
@@ -96,6 +113,36 @@ body {
   border-color: #f4671c;
   color: #fff;
 }
+
+/* Skill chips read as tags, not primary filters — quieter styling */
+.chip-skill {
+  min-width: auto;
+  text-transform: none;
+  font-weight: 600;
+  border-color: #ecdcd5;
+  color: #a06a4a;
+  background: #fff8f5;
+}
+.chip-skill:hover { background: #fdece4; }
+.chip-skill.active {
+  background: linear-gradient(180deg, #f97a24 0%, #f4671c 100%);
+  border-color: #f4671c;
+  color: #fff;
+}
+
+/* My Posts gets its own accent so it reads as a view toggle, not a filter */
+.chip-mine {
+  min-width: auto;
+  border-color: #d8cfe8;
+  color: #5b3ba8;
+}
+.chip-mine:hover { background: #f2eef9; }
+.chip-mine.active {
+  background: linear-gradient(180deg, #7c5fd8 0%, #6a48c9 100%);
+  border-color: #6a48c9;
+  color: #fff;
+}
+
 .chip.clear {
   border-color: #e2d7d2; color: #a09793;
   text-transform: none; min-width: auto;
