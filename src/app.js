@@ -111,6 +111,9 @@ function createApp() {
   const messageRoutes = require('./routes/messages');
   app.use('/messages', requireLogin, messageRoutes);
 
+  const apiMessageThreadRoutes = require('./routes/apiMessageThread');
+    app.use('/api/messages', verifyAuth, apiMessageThreadRoutes);
+
   // Logout
   app.get('/logout', (req, res) => {
     res.clearCookie('token');
