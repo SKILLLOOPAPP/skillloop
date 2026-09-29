@@ -1,27 +1,27 @@
 // SkillLoop Express App Factory
 // src/app.js
-
+ 
 const express = require('express');
 const session = require('express-session');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const path = require('path');
-
+ 
 function createApp() {
   const app = express();
-
+ 
   // ===== Middleware =====
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());
-
+ 
   // Set view engine
   app.set('view engine', 'ejs');
   app.set('views', path.join(__dirname, '../views'));
-
+ 
   // Static files
   app.use(express.static(path.join(__dirname, '../public')));
-
+ 
   // Session config
   app.use(session({
     secret: process.env.SESSION_SECRET || 'dev-secret',
@@ -33,10 +33,10 @@ function createApp() {
       maxAge: 24 * 60 * 60 * 1000
     }
   }));
-
+ 
   // ===== Database Connection (serverless-compatible) =====
   let mongoConnection = null;
-
+ 
   async function connectDB() {
     if (mongoConnection && mongoose.connection.readyState === 1) return mongoConnection;
     mongoConnection = await mongoose.connect(
@@ -46,7 +46,7 @@ function createApp() {
     console.log('✓ MongoDB connected');
     return mongoConnection;
   }
-
+ 
   app.use(async (req, res, next) => {
     try {
       await connectDB();
@@ -55,11 +55,11 @@ function createApp() {
       res.status(500).json({ error: 'Database connection failed' });
     }
   });
-
+ 
   // ===== Auth Middleware =====
   const { isLoggedIn, requireLogin, verifyAuth } = require('./middleware/auth');
   app.use(isLoggedIn);
-
+ 
   // Load the full user record once per request so every view gets
   // name/email/avatar via res.locals.currentUser (JWT only carries the id).
   app.use(async (req, res, next) => {
@@ -77,75 +77,77 @@ function createApp() {
     }
     next();
   });
-
+ 
   // ===== Unread Message Count Middleware =====
   const { attachUnreadCount } = require('./middleware/unreadCount');
   app.use(attachUnreadCount);
-
-  
-
+ 
   // ===== Routes =====
-
+ 
   // Auth routes
   const authRoutes = require('./routes/auth');
   app.use('/api/auth', authRoutes);
-
+ 
   // User API routes (JSON) — public profile lookup, used e.g. for post-author summaries
   const apiUserRoutes = require('./routes/apiUsers');
   app.use('/api/users', verifyAuth, apiUserRoutes);
-
-  // Posts routes
+ 
+  // Posts routes (pages)
   const postRoutes = require('./routes/posts');
   app.use('/posts', requireLogin, postRoutes);
-
-  const apiPostSearchRoutes = require('./routes/apiPostSearch');  
+ 
+  // Posts API — GET /api/posts?search= (search) and POST /api/posts (create)
+  const apiPostSearchRoutes = require('./routes/apiPostSearch');
   app.use('/api/posts', verifyAuth, apiPostSearchRoutes);
-  
+ 
+  const apiPostCreateRoutes = require('./routes/apiPostCreate');
+  app.use('/api/posts', verifyAuth, apiPostCreateRoutes);
+ 
+  // Matching API — /api/match
   app.use('/api', require('./routes/match'));
+ 
   // Profile routes
   const profileRoutes = require('./routes/profile');
   app.use('/profile', requireLogin, profileRoutes);
-
-
+ 
   // Messaging routes
   const messageRoutes = require('./routes/messages');
   app.use('/messages', requireLogin, messageRoutes);
-
+ 
   const apiMessageThreadRoutes = require('./routes/apiMessageThread');
-    app.use('/api/messages', verifyAuth, apiMessageThreadRoutes);
-
+  app.use('/api/messages', verifyAuth, apiMessageThreadRoutes);
+ 
   // Logout
   app.get('/logout', (req, res) => {
     res.clearCookie('token');
     if (req.session) req.session.destroy(() => res.redirect('/'));
     else res.redirect('/');
   });
-
-
+ 
   // ── Page routes ──
-
+ 
   app.get('/', (req, res) => {
     res.render('home', {});
   });
-
+ 
   app.get('/signin', (req, res) => {
     res.render('auth/signin', { currentUser: null });
   });
-
+ 
   app.get('/signup', (req, res) => {
     res.render('auth/signup', { currentUser: null });
   });
-
+ 
   // ── Dashboard — fetches user + posts from DB ──
   app.get('/dashboard', requireLogin, async (req, res) => {
     try {
       const User = require('./models/User');
       const Post = require('./models/Post');
-
+ 
       // Full user from DB
       const user = req.fullUser || await User.findById(req.user.id).lean();
       if (!user) return res.redirect('/signin');
-
+ 
       // User's own posts (newest first)
       const userPosts = await Post.find({
         author: req.user.id,
@@ -153,15 +155,15 @@ function createApp() {
       })
         .sort({ createdAt: -1 })
         .lean();
-
-      // Suggested posts — AI-matched via /api/match logic, with automatic fallback
+ 
+      // Suggested posts — skill-matched via the shared /api/match logic, with fallback to newest posts
       const { getSuggestionsForUser } = require('./routes/match');
       const { suggestions: suggestedPosts, source: suggestionsSource } = await getSuggestionsForUser(req.user.id);
       console.log('Suggestions source:', suggestionsSource);
-
+ 
       // Notifications placeholder (extend when you build a Notification model)
       const notifications = [];
-
+ 
       res.render('dashboard/dashboard', {
         user,
         currentUser: user,
@@ -175,47 +177,40 @@ function createApp() {
       res.redirect('/signin');
     }
   });
-
-
+ 
   app.get('/browse', requireLogin, async (req, res, next) => {
     try {
       const Post = require('./models/Post');
       const { timeAgo, shortName } = require('./utils/postHelpers');
-
+ 
       const raw = await Post.find({ status: 'open' })
         .sort({ createdAt: -1 })
         .populate('author', 'firstName lastName')
         .lean();
-
+ 
       const posts = raw.map(p => ({
         ...p,
         timeAgo: timeAgo(p.createdAt),
         authorName: shortName(p.author),
       }));
-
+ 
       res.render('browse', { posts });
     } catch (err) {
       next(err);
     }
   });
-
-  // ===== API — Conversations / Messages =====
-
-
-
-
-
+ 
   // ===== 404 Handler =====
   app.use((req, res) => {
     res.status(404).send('Not found: ' + req.method + ' ' + req.originalUrl);
   });
-
+ 
   // ===== Error Handler =====
   app.use((err, req, res, next) => {
     console.error('\n===== ERROR on ' + req.method + ' ' + req.originalUrl + ' =====');
     console.error(err && err.stack ? err.stack : err);
     console.error('==========================================\n');
-
+ 
     if (process.env.NODE_ENV !== 'production') {
       return res.status(500).type('text/plain').send(
         'ERROR on ' + req.method + ' ' + req.originalUrl + '\n\n' +
@@ -224,8 +219,9 @@ function createApp() {
     }
     res.status(500).json({ error: 'Internal server error' });
   });
-
+ 
   return app;
 }
-
+ 
 module.exports = createApp;
+ 
