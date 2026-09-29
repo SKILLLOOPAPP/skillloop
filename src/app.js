@@ -82,6 +82,8 @@ function createApp() {
   const { attachUnreadCount } = require('./middleware/unreadCount');
   app.use(attachUnreadCount);
 
+  
+
   // ===== Routes =====
 
   // Auth routes
@@ -96,8 +98,9 @@ function createApp() {
   const postRoutes = require('./routes/posts');
   app.use('/posts', requireLogin, postRoutes);
 
-  const apiPostCreateRoutes = require('./routes/apiPostCreate');
-  app.use('/api/posts', verifyAuth, apiPostCreateRoutes);
+  const apiPostSearchRoutes = require('./routes/apiPostSearch');  
+  app.use('/api/posts', verifyAuth, apiPostSearchRoutes);
+  
   app.use('/api', require('./routes/match'));
   // Profile routes
   const profileRoutes = require('./routes/profile');
@@ -114,6 +117,7 @@ function createApp() {
     if (req.session) req.session.destroy(() => res.redirect('/'));
     else res.redirect('/');
   });
+
 
   // ── Page routes ──
 
