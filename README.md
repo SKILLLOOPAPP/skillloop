@@ -34,7 +34,7 @@ Post what you need help with, offer what you can teach, and get matched with the
 
 ---
 
-## 💡 About the Project
+##  About the Project
 
 Students often need help with a specific topic, like a tricky assignment concept, a programming language or exam prep, while other students already know it well and are happy to help. SkillLoop connects them.
 
@@ -44,25 +44,25 @@ Conversations are tied to a specific post rather than open direct messaging, whi
 
 ---
 
-## ✨ Features
+## Features
 
 | Area | Feature | Use Case |
 |---|---|---|
-| 🔐 **Authentication** | Sign up / sign in with bcrypt-hashed passwords and JWT sessions in `httpOnly` cookies | UC1, UC3 |
-| 🛡️ **Route protection** | JWT verification middleware rejects missing, invalid, expired and forged tokens | UC3 |
-| 📝 **Post management** | Create, edit, delete and resolve posts (topic, location, languages, notes), owner-only edits, server-side validation and duplicate prevention | UC5 |
-| 🔎 **Browse & search** | Browse all open posts, search and filter by topic, location and language, with pagination | UC6 |
-| 📄 **Post details** | Full post view with author profile and threaded comments | UC7 |
-| 💬 **Messaging** | Post-scoped conversations persisted in MongoDB, with polling fallback | UC8, UC9 |
-| 🔔 **Real-time updates** | Socket.IO server with JWT-authenticated per-user rooms for targeted new-message events | UC10 |
-| 👤 **Profile** | View and edit profile, account settings and password update | UC11 |
-| 🗑️ **Account deletion** | Soft delete that anonymises the user's posts instead of hard-deleting them | UC11 |
-| 🤖 **AI matching** | "Suggested for You" dashboard section powered by `/api/match`, with automatic fallback so suggestions still load if the AI service fails or times out | UC12 |
-| 🚩 **Moderation** | Report a post or user, with schema-level integrity checks and duplicate-report prevention | UC13, UC15 |
+| **Authentication** | Sign up / sign in with bcrypt-hashed passwords and JWT sessions in `httpOnly` cookies | UC1, UC3 |
+| **Route protection** | JWT verification middleware rejects missing, invalid, expired and forged tokens | UC3 |
+| **Post management** | Create, edit, delete and resolve posts (topic, location, languages, notes), owner-only edits, server-side validation and duplicate prevention | UC5 |
+| **Browse & search** | Browse all open posts, search and filter by topic, location and language, with pagination | UC6 |
+| **Post details** | Full post view with author profile and threaded comments | UC7 |
+| **Messaging** | Post-scoped conversations persisted in MongoDB, with polling fallback | UC8, UC9 |
+| **Real-time updates** | Socket.IO server with JWT-authenticated per-user rooms for targeted new-message events | UC10 |
+| **Profile** | View and edit profile, account settings and password update | UC11 |
+| **Account deletion** | Soft delete that anonymises the user's posts instead of hard-deleting them | UC11 |
+| **AI matching** | "Suggested for You" dashboard section powered by `/api/match`, with automatic fallback so suggestions still load if the AI service fails or times out | UC12 |
+| **Moderation** | Report a post or user, with schema-level integrity checks and duplicate-report prevention | UC13, UC15 |
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
 | Layer | Technology |
 |---|---|
@@ -106,7 +106,7 @@ flowchart LR
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```text
 skillloop/
@@ -136,7 +136,7 @@ skillloop/
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -176,7 +176,7 @@ Open **http://localhost:3000**. The terminal should show:
 
 ---
 
-## 🔑 Environment Variables
+## Environment Variables
 
 Copy `.env.example` to `.env` and set:
 
@@ -193,11 +193,11 @@ Copy `.env.example` to `.env` and set:
 | `SOCKET_IO_CORS` | ⬜ | Allowed Socket.IO origin |
 | `EMAIL_SERVICE`, `EMAIL_USER`, `EMAIL_PASSWORD` | ⬜ | Optional email configuration |
 
-> ⚠️ Never commit `.env`. It is listed in `.gitignore`.
+> Never commit `.env`. It is listed in `.gitignore`.
 
 ---
 
-## 📜 Available Scripts
+## Available Scripts
 
 | Command | Description |
 |---|---|
@@ -212,7 +212,7 @@ Copy `.env.example` to `.env` and set:
 
 ---
 
-## 🧪 Testing
+## Testing
 
 Tests use **Jest** and **Supertest**, sending real HTTP requests into the Express app through `createApp()`. They run against a separate `skillloop-test` database, so real data is never touched, and each test clears its data for isolation.
 
@@ -236,7 +236,7 @@ npm run test:coverage
 
 ---
 
-## 📡 API Reference
+## API Reference
 
 ### Authentication (`/api/auth`)
 
@@ -267,7 +267,7 @@ npm run test:coverage
 
 ---
 
-## ☁️ Deployment
+## Deployment
 
 SkillLoop deploys to **Vercel** with separate **staging** and **production** environments.
 
@@ -280,7 +280,7 @@ SkillLoop deploys to **Vercel** with separate **staging** and **production** env
 ---
 
 
-## 🤝 Contributing
+## Contributing
 
 We use a **feature-branch workflow**: one branch and one pull request per feature.
 
@@ -304,12 +304,11 @@ Then open a pull request using the PR template (summary, linked Trello card, tes
 
 ---
 
-## 👥 Team
+## Team
 
 SkillLoop was developed by Team Skill Loop for SIT725 Applied Software Engineering at Deakin University.
-
-- Akashdeep Singh
 - Aaron Chewlun
+- Akashdeep Singh
 - Arjun Vennu
 - Manikkuwadu Kasun Wimalasuriya
 - Md Isa Sayek Huda
