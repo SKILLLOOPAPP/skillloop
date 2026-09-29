@@ -39,7 +39,13 @@ const postSchema = new mongoose.Schema({
   },
 }, { timestamps: true });
 
+// Supports general post browsing ordered by newest first.
 postSchema.index({ status: 1, createdAt: -1 });
-postSchema.index({ author: 1 });
+
+// Supports "My Posts" queries by author/status while preserving newest-first sorting.
+postSchema.index({ author: 1, status: 1, createdAt: -1 });
+
+// Supports browsing by post type and status while preserving newest-first sorting.
+postSchema.index({ status: 1, type: 1, createdAt: -1 });
 
 module.exports = mongoose.model('Post', postSchema);
